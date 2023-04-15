@@ -1,8 +1,13 @@
 <template>
   <div class="page-title">账号信息</div>
-  <el-row class="row-space">
-    <el-input v-model="keyword" placeholder="输入用户关键词进行搜索" clearable class="w-50" size="large"/>
-    <el-button style="margin-top: 10px;" type="primary" :icon="Search" @click="query()" :loading="queryLoading">查询</el-button>
+  <el-row class="row-space" :gutter="10">
+    <el-col :span="5">
+      <el-input v-model="keyword" placeholder="输入用户关键词进行搜索" clearable />
+    </el-col>
+    <el-col :span="3">
+      <el-button type="primary" :icon="Search" @click="query()" :loading="queryLoading">查询
+      </el-button>
+    </el-col>
   </el-row>
 
   <el-table :data="tableData" stripe border empty-text="暂时没有数据" style="width: 100%" height="26rem">
@@ -14,7 +19,11 @@
 
   <el-button-group class="row-space">
     <el-button type="primary" :icon="ArrowLeft" :disabled="!hasLeftPage" @click="prevQuery()">上一页</el-button>
-    <el-button type="primary" :icon="ArrowRight" :disabled="!hasRightPage" @click="nextQuery()">下一页</el-button>
+    <el-button type="primary" :disabled="!hasRightPage" @click="nextQuery()">下一页
+      <el-icon class="el-icon--right">
+        <ArrowRight/>
+      </el-icon>
+    </el-button>
   </el-button-group>
 </template>
 
@@ -78,7 +87,3 @@ const query = () => {
 
 query();
 </script>
-
-<style scoped>
-
-</style>

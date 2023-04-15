@@ -1,14 +1,25 @@
 <template>
   <div class="page-title">卡密记录</div>
 
-  <el-row class="row-space">
-    <el-button type="primary" :icon="Search" @click="query()" :loading="queryLoading">查询</el-button>
+  <el-row class="row-space" :gutter="15">
+    <el-col :span="4">
+      <el-input v-model="cardId" placeholder="卡密套餐ID" clearable/>
+    </el-col>
+    <el-col :span="4">
+      <el-input v-model="exchangeKey" placeholder="兑换码" clearable/>
+    </el-col>
+    <el-col :span="4">
+      <el-input v-model="userKeyword" placeholder="用户关键词" clearable/>
+    </el-col>
+    <el-col :span="4">
+      <el-button type="primary" :icon="Search" @click="query()" :loading="queryLoading">查询</el-button>
+    </el-col>
   </el-row>
 
-  <el-table :data="tableData" stripe border empty-text="暂时没有数据" style="width: 100%" height="29rem">
-    <el-table-column prop="id" label="ID"/>
-    <el-table-column prop="accountId" label="账号ID"/>
-    <el-table-column prop="cardId" label="卡密ID"/>
+  <el-table :data="tableData" table-layout="auto" stripe border empty-text="暂时没有数据" style="width: 100%" height="29rem">
+    <el-table-column prop="id" label="ID" width="100px"/>
+    <el-table-column prop="accountId" label="账号ID" width="100px"/>
+    <el-table-column prop="cardId" label="卡密ID" width="70px"/>
     <el-table-column prop="cardName" label="卡密名称"/>
     <el-table-column prop="cardType" label="卡密类型"/>
     <el-table-column prop="exchangeKey" label="兑换卡密"/>
@@ -19,10 +30,20 @@
     <el-table-column prop="state" label="状态"/>
     <el-table-column prop="createTime" label="创建时间"/>
     <el-table-column prop="updateTime" label="更新时间"/>
+    <el-table-column label="操作" fixed="right">
+      <template #default="scope">
+        <el-row class="row-space">
+          <el-button v-if="scope.row.accountId === 0" link type="primary" @click="bindRecord(scope.row)">绑定</el-button>
+        </el-row>
+        <el-row class="row-space">
+          <el-button link type="primary" @click="disable(scope.row)">禁用</el-button>
+        </el-row>
+      </template>
+    </el-table-column>
   </el-table>
   <el-button-group class="row-space">
     <el-button type="primary" :icon="ArrowLeft" :disabled="!hasLeftPage" @click="prevQuery()">上一页</el-button>
-    <el-button type="primary" :icon="ArrowRight" :disabled="!hasRightPage" @click="nextQuery()">下一页</el-button>
+    <el-button type="primary" :disabled="!hasRightPage" @click="nextQuery()">下一页<el-icon class="el-icon--right"><ArrowRight /></el-icon></el-button>
   </el-button-group>
 </template>
 
@@ -36,6 +57,15 @@ export default {
 import {Search, ArrowRight, ArrowLeft} from '@element-plus/icons-vue'
 import {ref} from "vue";
 import {request} from "~/request";
+
+
+const disable = (row) => {
+
+}
+
+const bindRecord = (row) => {
+
+}
 
 const tableData = ref([]);
 const queryLoading = ref(false);
@@ -56,14 +86,26 @@ const nextQuery = () => {
   query();
 }
 
+const cardId = ref();
+const exchangeKey = ref();
+const userKeyword = ref();
 const query = () => {
   if (queryLoading.value) {
     return;
   }
+
+  let param = {
+    'page': pageParam.value.page,
+    'size': pageParam.value.size,
+    'card_id': cardId.value,
+    'exchange_key': exchangeKey.value,
+    'keyword': userKeyword.value,
+  }
+
   hasLeftPage.value = false;
   hasRightPage.value = false;
   queryLoading.value = true;
-  request('api/admin/card/cardRecordList', pageParam.value, 'get')
+  request('api/admin/card/cardRecordList', param, 'get')
       .then((response) => {
         tableData.value = response.data.data;
         queryLoading.value = false;
@@ -80,9 +122,9 @@ const query = () => {
       });
 }
 
-const formatTime = (timeStr)=>{
+const formatTime = (timeStr) => {
   let target = new Date(timeStr).toLocaleString()
-  if('1970/1/1 08:00:00' === target){
+  if ('1970/1/1 08:00:00' === target) {
     return '-';
   }
   return target;
@@ -105,6 +147,3 @@ const recordState = (code) => {
 query();
 
 </script>
-<style scoped>
-
-</style>

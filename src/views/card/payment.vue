@@ -1,8 +1,19 @@
 <template>
   <div class="page-title">支付记录</div>
 
-  <el-row class="row-space">
-    <el-button type="primary" :icon="Search" @click="query()" :loading="queryLoading">查询</el-button>
+  <el-row class="row-space" :gutter="15">
+    <el-col :span="4">
+      <el-input v-model="sysCode" placeholder="系统订单号" clearable/>
+    </el-col>
+    <el-col :span="4">
+      <el-input v-model="partyCode" placeholder="支付订单号" clearable/>
+    </el-col>
+    <el-col :span="4">
+      <el-input v-model="userKeyword" placeholder="用户关键词" clearable/>
+    </el-col>
+    <el-col :span="4">
+      <el-button type="primary" :icon="Search" @click="query()" :loading="queryLoading">查询</el-button>
+    </el-col>
   </el-row>
 
   <el-table :data="tableData" stripe border empty-text="暂时没有数据" style="width: 100%" height="29rem">
@@ -17,7 +28,7 @@
   </el-table>
   <el-button-group class="row-space">
     <el-button type="primary" :icon="ArrowLeft" :disabled="!hasLeftPage" @click="prevQuery()">上一页</el-button>
-    <el-button type="primary" :icon="ArrowRight" :disabled="!hasRightPage" @click="nextQuery()">下一页</el-button>
+    <el-button type="primary" :disabled="!hasRightPage" @click="nextQuery()">下一页<el-icon class="el-icon--right"><ArrowRight /></el-icon></el-button>
   </el-button-group>
 
 </template>
@@ -36,6 +47,9 @@ const tableData = ref([]);
 const queryLoading = ref(false);
 const hasLeftPage = ref(false);
 const hasRightPage = ref(false);
+const sysCode = ref();
+const partyCode = ref();
+const userKeyword = ref();
 const pageParam = ref({
   page: 1,
   size: 10,
@@ -58,7 +72,14 @@ const query = () => {
   hasLeftPage.value = false;
   hasRightPage.value = false;
   queryLoading.value = true;
-  request('api/admin/card/payment', pageParam.value, 'get')
+  let param = {
+    'page': pageParam.value.page,
+    'size': pageParam.value.size,
+    'sys_code': sysCode.value,
+    'party_code': partyCode.value,
+    'keyword': userKeyword.value,
+  }
+  request('api/admin/card/payment', param, 'get')
       .then((response) => {
         tableData.value = response.data.data;
         queryLoading.value = false;
@@ -88,7 +109,3 @@ const payType = (code) => {
 query();
 
 </script>
-
-<style scoped>
-
-</style>

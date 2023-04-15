@@ -22,7 +22,6 @@ export default {
 <script setup lang="ts">
 import {inject, ref} from 'vue'
 import {request} from "~/request";
-import {ElMessage} from 'element-plus'
 import {useRouter} from "vue-router";
 const router = useRouter();
 
@@ -48,7 +47,6 @@ const login = () => {
       .then((response) => {
         onLogin.value = false;
         if (response.data.code != 200) {
-          ElMessage({message: response.data.msg, type: 'error'});
           return;
         }
         window.localStorage.setItem("token", response.data.data);
@@ -71,7 +69,7 @@ check();
 
 </script>
 
-<style scoped>
+<style>
 #login-area {
   text-align: center;
   width: 265px;

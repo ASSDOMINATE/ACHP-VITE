@@ -22,8 +22,49 @@
 
   <el-button-group class="row-space">
     <el-button type="primary" :icon="ArrowLeft" :disabled="!hasLeftPage" @click="prevQuery()">上一页</el-button>
-    <el-button type="primary" :icon="ArrowRight" :disabled="!hasRightPage" @click="nextQuery()">下一页</el-button>
+    <el-button type="primary" :disabled="!hasRightPage" @click="nextQuery()">下一页<el-icon class="el-icon--right"><ArrowRight /></el-icon></el-button>
   </el-button-group>
+
+  <el-dialog
+      v-model="showDetail"
+      title="场景详情"
+      width="50%"
+  >
+    <el-row class="row-space">
+        <el-text>标题</el-text>
+        <el-input v-model="sceneInfo.title" size="large"></el-input>
+    </el-row>
+    <el-row class="row-space">
+      <el-text>描述</el-text>
+        <el-input v-model="sceneInfo.desr" :rows="2"
+                  type="textarea"></el-input>
+    </el-row>
+    <el-row class="row-space">
+      <el-text>发送提示</el-text>
+        <el-input v-model="sceneInfo.notice" :rows="2"
+                  type="textarea"></el-input>
+    </el-row>
+    <el-row class="row-space">
+      <el-text>关联场景/角色</el-text>
+    </el-row>
+
+    <el-row class="row-space">
+      <el-text>设置参数类型</el-text>
+    </el-row>
+
+    <el-row class="row-space">
+      <el-text>设置发送规则</el-text>
+    </el-row>
+
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="showDetail=false">取消</el-button>
+        <el-button type="primary" @click="saveDetail()">
+          保存
+        </el-button>
+      </span>
+    </template>
+  </el-dialog>
 
 </template>
 
@@ -37,6 +78,25 @@ export default {
 import {Search, ArrowRight, ArrowLeft} from '@element-plus/icons-vue'
 import {ref} from "vue";
 import {request} from "~/request";
+
+const sceneInfo = ref();
+
+const getInfo = (row) => {
+  let param = {
+    'id':row.id
+  }
+  request("api/admin/scene/info",param,'get').then((response)=>{
+    console.log(response.data);
+    sceneInfo.value = response.data.data;
+    showDetail.value = true;
+  })
+}
+
+const showDetail = ref(false);
+
+const saveDetail = () => {
+
+}
 
 const tableData = ref([]);
 const queryLoading = ref(false);
@@ -80,14 +140,8 @@ const query = () => {
       });
 }
 
-const getInfo = (row) => {
-  console.log(row);
-}
+
 
 query();
 
 </script>
-
-<style scoped>
-
-</style>
