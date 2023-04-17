@@ -3,7 +3,7 @@ import {createRouter, createWebHistory, RouterOptions} from "vue-router";
 // 路由类型:RouteRecordRaw
 const routes: ({ path: string; component: () => Promise<{}>; name: string } | { path: string; component: () => Promise<{ readonly default?: { name: string } }>; name: string })[] = [
     {
-        path: "/login",
+        path: "/",
         name: "login",
         component: () => import("../views/login.vue"),
     },
@@ -50,7 +50,7 @@ const routes: ({ path: string; component: () => Promise<{}>; name: string } | { 
 ];
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHistory('/admin/'),
     routes,
 } as RouterOptions);
 
