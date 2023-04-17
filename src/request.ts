@@ -1,5 +1,7 @@
 import axios from "axios";
 import {ElMessage} from "element-plus";
+import router from "./router";
+import {useRouter} from "vue-router";
 
 axios.defaults.timeout = 3000;
 axios.defaults.baseURL = "http://www.thadhff.site";
@@ -25,6 +27,16 @@ axios.interceptors.response.use(
     response => {
         if (response.data.code != 200) {
             ElMessage({message: response.data.msg, type: 'error'});
+        }
+        switch (response.data.code) {
+            case 402:
+            case 407:
+            case 408:
+            case 412:
+                window.localStorage.removeItem('token');
+                break;
+            default:
+                break;
         }
         return response;
     },

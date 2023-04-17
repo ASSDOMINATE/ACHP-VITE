@@ -32,10 +32,7 @@
     <el-table-column prop="updateTime" label="更新时间"/>
     <el-table-column label="操作" fixed="right">
       <template #default="scope">
-        <el-row class="row-space">
-          <el-button v-if="scope.row.accountId === 0" link type="primary" @click="bindRecord(scope.row)">绑定</el-button>
-        </el-row>
-        <el-row class="row-space">
+        <el-row class="row-space" v-if="scope.row.state!=='禁用'">
           <el-button link type="primary" @click="disable(scope.row)">禁用</el-button>
         </el-row>
       </template>
@@ -43,7 +40,11 @@
   </el-table>
   <el-button-group class="row-space">
     <el-button type="primary" :icon="ArrowLeft" :disabled="!hasLeftPage" @click="prevQuery()">上一页</el-button>
-    <el-button type="primary" :disabled="!hasRightPage" @click="nextQuery()">下一页<el-icon class="el-icon--right"><ArrowRight /></el-icon></el-button>
+    <el-button type="primary" :disabled="!hasRightPage" @click="nextQuery()">下一页
+      <el-icon class="el-icon--right">
+        <ArrowRight/>
+      </el-icon>
+    </el-button>
   </el-button-group>
 </template>
 
@@ -57,15 +58,23 @@ export default {
 import {Search, ArrowRight, ArrowLeft} from '@element-plus/icons-vue'
 import {ref} from "vue";
 import {request} from "~/request";
+import {ElMessage} from "element-plus";
 
 
 const disable = (row) => {
-
+  let param = {
+    'id': row.id,
+  }
+  request('api/admin/card/setRecordDisable', param, 'post').then((response) => {
+    if (response.data.code == 200) {
+      if (response.data.success) {
+        ElMessage({message: '保存成功', type: 'success'});
+      }
+    }
+    query();
+  })
 }
 
-const bindRecord = (row) => {
-
-}
 
 const tableData = ref([]);
 const queryLoading = ref(false);
@@ -105,21 +114,20 @@ const query = () => {
   hasLeftPage.value = false;
   hasRightPage.value = false;
   queryLoading.value = true;
-  request('api/admin/card/cardRecordList', param, 'get')
-      .then((response) => {
-        tableData.value = response.data.data;
-        queryLoading.value = false;
-        hasRightPage.value = pageParam.value.size == tableData.value.length;
-        hasLeftPage.value = pageParam.value.page > 1;
-        tableData.value.forEach((item) => {
-          item.cardType = item.cardType == '1' ? '天数限制' : '次数限制';
-          item.state = recordState(item.state);
-          item.startTime = formatTime(new Date(item.startTime).toLocaleString());
-          item.expireTime = formatTime(new Date(item.expireTime).toLocaleString());
-          item.createTime = new Date(item.createTime).toLocaleString();
-          item.updateTime = new Date(item.updateTime).toLocaleString();
-        })
-      });
+  request('api/admin/card/cardRecordList', param, 'get').then((response) => {
+    tableData.value = response.data.data;
+    queryLoading.value = false;
+    hasRightPage.value = pageParam.value.size == tableData.value.length;
+    hasLeftPage.value = pageParam.value.page > 1;
+    tableData.value.forEach((item) => {
+      item.cardType = item.cardType == '1' ? '天数限制' : '次数限制';
+      item.state = recordState(item.state);
+      item.startTime = formatTime(new Date(item.startTime).toLocaleString());
+      item.expireTime = formatTime(new Date(item.expireTime).toLocaleString());
+      item.createTime = new Date(item.createTime).toLocaleString();
+      item.updateTime = new Date(item.updateTime).toLocaleString();
+    })
+  });
 }
 
 const formatTime = (timeStr) => {
