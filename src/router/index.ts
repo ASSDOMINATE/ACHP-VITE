@@ -28,6 +28,11 @@ const routes: ({ path: string; component: () => Promise<{}>; name: string } | { 
         component: () => import("../views/base/keyConfig.vue"),
     },
     {
+        path: "/appConfig",
+        name: "appConfig",
+        component: () => import("../views/base/appConfig.vue"),
+    },
+    {
         path: "/card",
         name: "card",
         component: () => import("../views/card/card.vue"),

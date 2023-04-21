@@ -1,10 +1,8 @@
 import axios from "axios";
 import {ElMessage} from "element-plus";
-import router from "./router";
-import {useRouter} from "vue-router";
 
 axios.defaults.timeout = 3000;
-axios.defaults.baseURL = "http://www.thadhff.site";
+axios.defaults.baseURL = "https://www.thadhff.site";
 
 const getStorageToken = () => {
     return window.localStorage.getItem("token");

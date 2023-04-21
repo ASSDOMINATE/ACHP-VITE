@@ -19,6 +19,30 @@
   </el-row>
   <el-row class="row-space send-config" :gutter="10">
     <el-col :span="9">
+      <el-input size="large" v-model="setSystem"
+                placeholder="系统预设角色描述">
+        <template #prepend>预设描述</template>
+      </el-input>
+    </el-col>
+  </el-row>
+  <el-row class="row-space send-config" :gutter="10">
+    <el-col :span="9">
+      <el-input size="large" v-model="temperature"
+                placeholder="模型的热度值，范围 0-2">
+        <template #prepend>模型热度</template>
+      </el-input>
+    </el-col>
+  </el-row>
+  <el-row class="row-space send-config" :gutter="10">
+    <el-col :span="9">
+      <el-input size="large" v-model="maxResultTokens"
+                placeholder="限制返回结果最大Token值">
+        <template #prepend>结果Tokens限制</template>
+      </el-input>
+    </el-col>
+  </el-row>
+  <el-row class="row-space send-config" :gutter="10">
+    <el-col :span="9">
       <el-input size="large" v-model="modelId"
                 placeholder="输入ChatGPT模型ID，默认模型ID为 gpt-3.5-turbo">
         <template #prepend>对话模型</template>
@@ -46,15 +70,19 @@ import {ElMessage} from "element-plus";
 const requestLimit = ref();
 const freqLimit = ref();
 const modelId = ref("");
-
+const temperature = ref();
+const maxResultTokens = ref();
 const queryLoading = ref(false);
-
+const setSystem = ref("");
 const save = () => {
   queryLoading.value = true;
   let param = {
     'dailyRequestLimit': requestLimit.value,
     'freqSecondLimit': freqLimit.value,
-    'modelId': modelId.value
+    'modelId': modelId.value,
+    'maxResultTokens': maxResultTokens.value,
+    'temperature': temperature.value,
+    'system': setSystem.value
   }
   request('api/admin/base/updateConfig', param, 'post').then((response) => {
     if (response.data.success) {
@@ -72,6 +100,8 @@ const refresh = () => {
         requestLimit.value = data.dailyRequestLimit;
         freqLimit.value = data.freqSecondLimit;
         modelId.value = data.modelId;
+        maxResultTokens.value = data.maxResultTokens;
+        temperature.value = data.temperature;
         queryLoading.value = false;
       })
 }

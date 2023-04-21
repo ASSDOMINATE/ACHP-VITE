@@ -11,7 +11,7 @@
     <el-table-column prop="id" label="ID"/>
     <el-table-column prop="type" label="类型">
       <template #default="scope">
-        <el-select :disabled="scope.row.id" v-model="scope.row.type" placeholder="选择类型">
+        <el-select :disabled="scope.row.id!=null" v-model="scope.row.type" placeholder="选择类型">
           <el-option label="场景" value="1"></el-option>
           <el-option label="角色" value="2"></el-option>
         </el-select>

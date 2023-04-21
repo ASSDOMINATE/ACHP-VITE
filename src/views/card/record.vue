@@ -12,6 +12,15 @@
       <el-input v-model="userKeyword" placeholder="用户关键词" clearable/>
     </el-col>
     <el-col :span="4">
+      <el-select v-model="selectState" placeholder="选择状态">
+        <el-option label="全部" value=""></el-option>
+        <el-option label="未使用" value="0"></el-option>
+        <el-option label="使用中" value="1"></el-option>
+        <el-option label="已使用" value="2"></el-option>
+        <el-option label="禁用" value="3"></el-option>
+      </el-select>
+    </el-col>
+    <el-col :span="4">
       <el-button type="primary" :icon="Search" @click="query()" :loading="queryLoading">查询</el-button>
     </el-col>
   </el-row>
@@ -98,6 +107,7 @@ const nextQuery = () => {
 const cardId = ref();
 const exchangeKey = ref();
 const userKeyword = ref();
+const selectState = ref();
 const query = () => {
   if (queryLoading.value) {
     return;
@@ -109,6 +119,7 @@ const query = () => {
     'card_id': cardId.value,
     'exchange_key': exchangeKey.value,
     'keyword': userKeyword.value,
+    'state':selectState.value
   }
 
   hasLeftPage.value = false;

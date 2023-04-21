@@ -23,6 +23,7 @@ export default {
 import {inject, ref} from 'vue'
 import {request} from "~/request";
 import {useRouter} from "vue-router";
+
 const router = useRouter();
 
 const isLogin = inject('isLogin');
@@ -41,7 +42,9 @@ const login = () => {
   onLogin.value = true;
   let param = {
     'sign': sign.value,
-    'pwd': pwd.value
+    'pwd': pwd.value,
+    'platform': 0,
+    'skipPerm': false
   }
   request("api/auth/login", param, 'post')
       .then((response) => {

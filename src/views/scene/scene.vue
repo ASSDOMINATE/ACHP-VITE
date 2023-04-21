@@ -62,8 +62,11 @@
     </el-row>
     <el-row class="row-space">
       <el-text>描述</el-text>
-      <el-input v-model="sceneInfo.desr" :rows="2"
-                type="textarea"></el-input>
+      <el-input v-model="sceneInfo.desr" :rows="2" type="textarea"></el-input>
+    </el-row>
+    <el-row class="row-space">
+      <el-text>预设</el-text>
+      <el-input v-model="sceneInfo.system" :rows="2" type="textarea"></el-input>
     </el-row>
     <el-row class="row-space">
       <el-text>发送提示</el-text>
@@ -106,8 +109,8 @@
         <el-row class="row-space-small">
           <el-select v-model="item.type" placeholder="选择类型" :disabled="item.disabledType">
             <el-option label="输入框" value="1"></el-option>
-            <el-option label="单选" value="2"></el-option>
-            <el-option label="多选" value="3"></el-option>
+            <el-option label="多选" value="2"></el-option>
+            <el-option label="单选" value="3"></el-option>
             <el-option label="字数限制" value="4"></el-option>
           </el-select>
         </el-row>
@@ -137,7 +140,7 @@
           </el-button>
         </el-row>
         <el-row class="row-space-small" v-if="item.type==='4'">
-          <el-input v-model="item.content.value" placeholder="字数限制"/>
+          <el-input v-model="item.content.max" placeholder="字数限制"/>
         </el-row>
         <el-row :gutter="24" class="row-space-small">
           <el-col :span="6">
@@ -230,7 +233,7 @@ const addItem = () => {
   sceneInfo.value.items.push({
     'content': {
       'value': '',
-      'max': '',
+      'max': 0,
       'selectWords': [],
       'maxSelected': 0
     }
@@ -244,6 +247,22 @@ const saveDetail = () => {
   let configs = [];
   for (let i = 0; i < sceneInfo.value.items.length; i++) {
     let item = sceneInfo.value.items[i];
+    switch (item.type.toString()) {
+      case '2':
+        if (item.content.selectWords.length == 0) {
+          continue;
+        }
+        item.content.maxSelected = item.content.selectWords.length;
+        break;
+      case '3':
+        if (item.content.selectWords.length == 0) {
+          continue;
+        }
+        item.content.maxSelected = 1;
+        break;
+      default:
+        break;
+    }
     items.push({
       'type': item.type,
       'title': item.title,
@@ -272,6 +291,7 @@ const saveDetail = () => {
     "title": sceneInfo.value.title,
     "desr": sceneInfo.value.desr,
     "notice": sceneInfo.value.notice,
+    "system": sceneInfo.value.system,
     "del": !sceneEnabled.value,
     "items": items,
     "configs": configs,
@@ -396,7 +416,7 @@ const query = () => {
     'del': queryDel.value === "-1" ? null : queryDel.value,
   }
 
-  request('api/admin/scene/list',param, 'get')
+  request('api/admin/scene/list', param, 'get')
       .then((response) => {
         tableData.value = response.data.data;
         queryLoading.value = false;
