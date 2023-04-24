@@ -42,6 +42,7 @@
       <el-menu-item index="4-1" @click="toPage('keyConfig')">API-KEY管理</el-menu-item>
       <el-menu-item index="4-2" @click="toPage('sendConfig')">对话相关配置</el-menu-item>
       <el-menu-item index="4-3" @click="toPage('appConfig')">APP配置</el-menu-item>
+      <el-menu-item index="4-4" @click="toPage('noticeConfig')">APP提醒</el-menu-item>
     </el-sub-menu>
   </el-menu>
 </template>

@@ -18,6 +18,7 @@
         <el-option label="使用中" value="1"></el-option>
         <el-option label="已使用" value="2"></el-option>
         <el-option label="禁用" value="3"></el-option>
+        <el-option label="待使用" value="4"></el-option>
       </el-select>
     </el-col>
     <el-col :span="4">
@@ -157,6 +158,8 @@ const recordState = (code) => {
       return "使用中";
     case 2:
       return "已使用";
+    case 4:
+      return "待使用";
     default:
       return "禁用";
   }

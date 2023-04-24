@@ -102,6 +102,7 @@ const refresh = () => {
         modelId.value = data.modelId;
         maxResultTokens.value = data.maxResultTokens;
         temperature.value = data.temperature;
+        setSystem.value = data.setSystem;
         queryLoading.value = false;
       })
 }

@@ -33,6 +33,11 @@ const routes: ({ path: string; component: () => Promise<{}>; name: string } | { 
         component: () => import("../views/base/appConfig.vue"),
     },
     {
+        path: "/noticeConfig",
+        name: "noticeConfig",
+        component: () => import("../views/base/noticeConfig.vue"),
+    },
+    {
         path: "/card",
         name: "card",
         component: () => import("../views/card/card.vue"),

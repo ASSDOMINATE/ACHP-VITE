@@ -15,9 +15,17 @@
         </el-radio-group>
       </template>
     </el-table-column>
-    <el-table-column prop="needUpdate" label="版本更新">
+    <el-table-column prop="needUpdate" label="可以更新">
       <template #default="scope">
         <el-radio-group v-model="scope.row.needUpdate" size="small">
+          <el-radio-button label="true">是</el-radio-button>
+          <el-radio-button label="false">否</el-radio-button>
+        </el-radio-group>
+      </template>
+    </el-table-column>
+    <el-table-column prop="needUpdate" label="强制更新">
+      <template #default="scope">
+        <el-radio-group v-model="scope.row.mustUpdate" size="small">
           <el-radio-button label="true">是</el-radio-button>
           <el-radio-button label="false">否</el-radio-button>
         </el-radio-group>
@@ -43,7 +51,7 @@
 
 <script lang="ts">
 export default {
-  name: "keyConfig"
+  name: "appConfig"
 }
 </script>
 <script setup lang="ts">
@@ -63,6 +71,7 @@ const refresh = () => {
     tableData.value.forEach((row) => {
       row.exchange = row.exchange ? row.exchange.toString() : 'false';
       row.needUpdate = row.needUpdate ? row.needUpdate.toString() : 'false';
+      row.mustUpdate = row.mustUpdate ? row.mustUpdate.toString() : 'false';
     })
     queryLoading.value = false;
   })
